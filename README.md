@@ -1,2 +1,2 @@
 # StealthGame
-Based off of Tom Looman's UDEMY Course
+Based of Tom Looman's UDEMY Course
