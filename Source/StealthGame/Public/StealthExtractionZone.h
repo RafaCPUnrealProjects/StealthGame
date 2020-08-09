@@ -18,6 +18,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	class UBoxComponent* OverlapComp;
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	class UDecalComponent* DecalComp;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	class USoundBase* ObjectiveMissionSound;
+
 	UFUNCTION()
 	void HandleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

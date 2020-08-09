@@ -3,6 +3,10 @@
 
 #include "Public/StealthExtractionZone.h"
 #include <Components/BoxComponent.h>
+#include <Components/DecalComponent.h>
+#include "StealthGameCharacter.h"
+#include "StealthGameGameMode.h"
+#include <Kismet/GameplayStatics.h>
 
 AStealthExtractionZone::AStealthExtractionZone()
 {
@@ -17,9 +21,22 @@ AStealthExtractionZone::AStealthExtractionZone()
 	OverlapComp->SetHiddenInGame(false);
 	
 	OverlapComp->OnComponentBeginOverlap.AddDynamic(this, &AStealthExtractionZone::HandleOverlap);
+
+	DecalComp = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComp"));
+	DecalComp->DecalSize = FVector(200);
+	DecalComp->SetupAttachment(RootComponent);
 }
 
 void AStealthExtractionZone::HandleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlapped with extraction zone!"));
+	AStealthGameCharacter* MyPawn = Cast<AStealthGameCharacter>(OtherActor);
+	if(MyPawn && MyPawn->bIsCarryingObjective)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ObjectiveMissionSound, GetActorLocation());
+		AStealthGameGameMode* GM = Cast<AStealthGameGameMode>(GetWorld()->GetAuthGameMode());
+		if(GM)
+		{
+			GM->CompleteMission(MyPawn);
+		}
+	}
 }
